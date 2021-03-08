@@ -1,26 +1,14 @@
-import requests
-from bs4 import BeautifulSoup
+from scrape_me import track_lister
+from playlist_brain import lovely_gesture
 
-travel_to = '2010-05-11'#input("To what date would you like to travel? Enter in YYYY-MM-DD: ")
+date_prompt = input("To what date would you like to travel? Enter in YYYY-DD-MM: ")
 
-response = requests.get(url=f'https://www.billboard.com/charts/hot-100/{travel_to}')
-response.raise_for_status()
+# passes the given date to function which compiles track list
+track_list = track_lister(date_prompt)
 
-source_raw = response.text
+# generates a playlist based on the tracks provided
+head_nod = lovely_gesture(track_list)
 
-source = BeautifulSoup(source_raw, 'html.parser')
 
-track_list = []
 
-song_rank = source.find_all(name='span', class_='chart-element__rank__number')
-song_title = source.find_all(name='span', class_='chart-element__information__song text--truncate color--primary')
-artist_by = source.find_all(name='span', class_='chart-element__information__artist text--truncate color--secondary')
-
-for x in range(100):
-    template = {
-        'rank': f'{song_rank[x].getText()}',
-        'track': f'{song_title[x].getText()}',
-        'artist': f'{artist_by[x].getText()}'
-    }
-    track_list.append(template)
 
